@@ -1,0 +1,17 @@
+
+library(e1071)
+data(cats, package= 'MASS')
+
+ind       <- sample(2, nrow(cats), replace= TRUE, prob=c (0.7,0.3 ))
+testset   <- cats[ind==1,]
+trainset  <- cats[ind==2,]
+
+
+model <- svm(Sex~.,data = trainset, kernel= "radial")
+prediccion <- predict(model, newdata= testset[-1])
+
+plot(model, cats)
+MC <- table(testset[, 1], prediccion)
+MC
+acierto <- (sum(diag(MC)))/(sum(MC))
+acierto

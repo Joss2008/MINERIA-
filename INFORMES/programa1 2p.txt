@@ -1,0 +1,40 @@
+#Mostramos los datos guardados 
+insurance
+
+library(ggplot2)
+
+#Guardamos los datosde (x) y (y) en una variable 
+d=insurance[,-1]  
+
+#Limite de las graficas
+limx <- c(-1, 8)
+limy <- limx
+
+#Grafica con puntos de los datos generados 
+plot(d, xlim = limx, ylim = limy,col="blue",xlab="Normales bivariadas",ylab=" ")
+
+distancia <- dist(d)
+dcompleta <- hclust(distancia, method = "complete")
+plot(dcompleta)
+
+d2 <- hclust(distancia, method = "ward.D2")
+plot(d2)
+
+abline(h=2, col = "green")
+dl2 <- cutree(d2, h=2)
+table(dl2)
+
+clust_datos <- cutree(dcompleta, h = 3)
+table(clust_datos)
+
+km_datos <- kmeans(scale(d), centers = 3,
+                   nstart = 20, iter.max = 50)
+km_datos$cluster
+
+plot(d, col = km_datos$cluster)
+points(km_datos$centers, cex= 2, col= 11,pch = 19)
+
+
+segment_customers <- cbind(d, cluster = clust_datos)
+View(segment_customers)
+

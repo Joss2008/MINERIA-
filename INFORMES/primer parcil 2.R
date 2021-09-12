@@ -1,0 +1,34 @@
+
+#Preparamos el set de datos 
+
+insurance.scale <- as.data.frame(scale(insurance[,5:9]))
+
+#Se crean los clusters
+
+set.seed(80)
+
+insurance.km <- kmeans(insurance.scale, centers = 4) #Se realiza un clustering
+names (insurance.km) #contendo del objeto
+
+insurance.km$cluster #asignacion observaciones a clusters
+insurance.km$totss #inercia total
+insurance.km$betweenss #inercia inter grupos
+insurance.km$withinss #inercia intra grupos
+insurance.km$tot.withinss #inercia intra grupos (total)
+
+
+#Determinar un numeor de clusters optimo 
+sumbt <- kmeans(insurance.scale, centers = 1)$betweenss
+
+for (i in 2:10) sumbt[i] <- kmeans(insurance.scale, centers = i)$betweenss
+
+plot(1:10, sumbt, type = "b", xlab = "numero de clusters", ylab = "Suma de cuadrados inter grupos")
+
+#Inspeccionaran los resultados
+
+plot(insurance$ant_comp, insurance$ant_perm, col= insurance.km$cluster ,xlab= "Fidelidad a la compañia" , ylab = "Experiencia")
+
+aggregate(insurance[,5:9] ,by = list(insurance.km$cluster), mean)
+      
+
+
